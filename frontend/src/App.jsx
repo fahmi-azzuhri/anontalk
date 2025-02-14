@@ -8,7 +8,7 @@ const App = () => {
   const [to, setTo] = useState("");
   const [content, setContent] = useState("");
   const sendMessageMutation = useMutation({
-    mutationFn: async ({ from, to, message }) => {
+    mutationFn: async ({ from, to, content }) => {
       const response = await axios.post(
         `${import.meta.env.VITE_API_ENDPOINT}/api/messages/sendMessage`,
         { from, to, content }
