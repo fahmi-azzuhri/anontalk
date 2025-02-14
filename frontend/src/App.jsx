@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 
 const App = () => {
   const [from, setFrom] = useState("");
@@ -15,7 +16,10 @@ const App = () => {
       return response.data;
     },
     onSuccess: () => {
-      window.open("berhasil");
+      toast.success("Message sent successfully!");
+    },
+    onError: (error) => {
+      toast.error(error.message);
     },
   });
 
@@ -27,6 +31,7 @@ const App = () => {
   const isValid = from && to && content;
   return (
     <div className="flex min-h-screen items-center justify-center p-6">
+      <Toaster position="top-center" reverseOrder={false} />
       <div className="grid md:grid-cols-2 gap-6 max-w-4xl rounded-lg p-8 shadow-lg">
         <div className="">
           <img src="/bg.png" alt="" />
