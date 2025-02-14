@@ -17,6 +17,9 @@ const App = () => {
     },
     onSuccess: () => {
       toast.success("Message sent successfully!");
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
     },
     onError: (error) => {
       toast.error(error.message);
