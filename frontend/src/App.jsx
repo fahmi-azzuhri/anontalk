@@ -25,10 +25,11 @@ const App = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!from || !to || !content) {
+      toast.error("Please fill all the fields");
+    }
     sendMessageMutation.mutate({ from, to, content });
   };
-
-  const isValid = from && to && content;
   return (
     <div className="flex min-h-screen items-center justify-center p-6">
       <Toaster position="top-center" reverseOrder={false} />
@@ -64,7 +65,6 @@ const App = () => {
             ></textarea>
             <button
               type="submit"
-              disabled={!isValid}
               className="w-full bg-pink-500 text-white py-2 rounded-lg flex items-center justify-center gap-2 cursor-pointer hover:bg-pink-600"
             >
               ✈ Send Message
