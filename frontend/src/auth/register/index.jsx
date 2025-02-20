@@ -1,3 +1,5 @@
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
 import React, { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -7,20 +9,54 @@ function Register() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
-  const matchPassword = () => {
-    if (!password || !confirmPassword) {
-      toast.error("Please fill all the fields");
-      return;
-    }
-    if (password !== confirmPassword) {
-      toast.error("Passwords do not match");
-      return;
-    }
-    toast.success("Account created successfully!");
+
+  const redirectLogin = () => {
     setTimeout(() => {
       navigate("/auth/onlyadmin/login-admin");
     }, 2500);
   };
+
+  const matchPassword = () => {
+    if (!email || !password || !confirmPassword) {
+      toast.error("Please fill all the fields");
+      return false;
+    }
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match");
+      return false;
+    }
+    return true;
+  };
+
+  const registerMutation = useMutation({
+    mutationFn: async ({ email, password }) => {
+      const response = await axios.post(
+        `${
+          import.meta.env.VITE_API_ENDPOINT
+        }/api/auth/onlyadmin/register-admin`,
+        { email, password }
+      );
+      return response.data;
+    },
+    onSuccess: () => {
+      redirectLogin();
+    },
+    onError: (error) => {
+      toast.error(error.response?.data?.message || "Register failed");
+    },
+  });
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    if (!matchPassword()) return;
+
+    toast.promise(registerMutation.mutateAsync({ email, password }), {
+      loading: "Please wait...",
+      success: "Account registered successfully",
+      error: "Register failed, please try again",
+    });
+  };
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
       <Toaster position="top-center" reverseOrder={false} />
@@ -55,7 +91,7 @@ function Register() {
             className="w-full px-4 py-2 bg-gray-100 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button
-            onClick={matchPassword}
+            onClick={handleRegister}
             className="w-full py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700"
           >
             Register

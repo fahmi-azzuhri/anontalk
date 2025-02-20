@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -11,7 +12,7 @@ function Login() {
   const loginMutation = useMutation({
     mutationFn: async ({ email, password }) => {
       const response = await axios.post(
-        `${import.meta.env.VITE_API_ENDPOINT}/api/auth/login-admin`,
+        `${import.meta.env.VITE_API_ENDPOINT}/api/auth/onlyadmin/login-admin`,
         {
           email,
           password,
@@ -23,14 +24,14 @@ function Login() {
       const { token } = data;
       Cookies.set("token", token, { expires: 1 });
       setTimeout(() => {
-        navigate("/auth/onlyadmin/dashboard");
+        navigate("/onlyadmin/dashboard");
       }, 2500);
     },
     onError: (error) => {
       toast.error(error.message);
     },
   });
-  const handleLogin = () => {
+  const handleLogin = (e) => {
     e.preventDefault();
     if (isValid) {
       toast.promise(loginMutation.mutateAsync({ email, password }), {
@@ -42,6 +43,7 @@ function Login() {
   };
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
+      <Toaster position="top-center" reverseOrder={false} />
       <div className="w-full max-w-sm p-6 bg-white rounded-lg shadow-md">
         <h2 className="text-2xl font-bold text-center text-blue-600">
           Login here
