@@ -4,16 +4,18 @@ import jwt from "jsonwebtoken";
 
 export const createAdmin = async (req, res) => {
   try {
-    const existingAdmin = await prisma.admin.findFirst();
+    const existingAdmin = await prisma.admin.findUnique({
+      where: { email: req.body.email },
+    });
     if (existingAdmin)
-      return res.status(400).json({ message: "Admin already exists" });
+      return res.status(400).json({ message: "Email already registered" });
 
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     const admin = await prisma.admin.create({
       data: { email: req.body.email, password: hashedPassword },
     });
 
-    res.status(201).json({ message: "Admin created", admin });
+    res.status(201).json({ message: "Admin registered successfully", admin });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

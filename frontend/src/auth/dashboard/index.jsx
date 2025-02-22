@@ -32,10 +32,13 @@ function Dashboard() {
   return (
     <div className="min-h-screen p-4 flex flex-col items-center">
       <div className="w-full max-w-md mt-2 border-2 border-gray-900 p-6">
-        <header className="w-full max-w-md flex justify-between items-center py-4">
+        <header className="w-full max-w-md flex justify-between items-center mb-5">
           <h1 className="text-xl font-bold">Dashboard</h1>
         </header>
-        <h2 className="text-lg font-semibold text-center">Anontalk! Results</h2>
+        <div className="flex flex-row justify-between items-center">
+          <h2 className="text-lg font-semibold">Anontalk! Results</h2>
+          <h2 className="text-sm font-semibold">10000303 Message Delivered</h2>
+        </div>
         <div className="flex flex-col gap-4">
           <Card color={getRandomColor()}>
             <p className="text-sm text-gray-100">New messages</p>
