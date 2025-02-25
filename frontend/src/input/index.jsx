@@ -4,9 +4,23 @@ import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 
 function Input({ setIsModalOpen }) {
-  const [from, setFrom] = useState("");
-  const [to, setTo] = useState("");
-  const [content, setContent] = useState("");
+  const [from, setFrom] = useState(localStorage.getItem("from") || null);
+  const [to, setTo] = useState(localStorage.getItem("to") || null);
+  const [content, setContent] = useState(
+    localStorage.getItem("content") || null
+  );
+  const handleFromChange = (e) => {
+    setFrom(e.target.value);
+    localStorage.setItem("from", e.target.value);
+  };
+  const handleToChange = (e) => {
+    setTo(e.target.value);
+    localStorage.setItem("to", e.target.value);
+  };
+  const handleContentChange = (e) => {
+    setContent(e.target.value);
+    localStorage.setItem("content", e.target.value);
+  };
   const sendMessageMutation = useMutation({
     mutationFn: async ({ from, to, content }) => {
       const response = await axios.post(
@@ -17,6 +31,14 @@ function Input({ setIsModalOpen }) {
     },
     onSuccess: () => {
       toast.success("Message sent successfully!");
+      localStorage.removeItem("from");
+      localStorage.removeItem("to");
+      localStorage.removeItem("content");
+
+      setFrom(null);
+      setTo(null);
+      setContent(null);
+
       setTimeout(() => {
         window.location.reload();
       }, 2000);
@@ -48,21 +70,21 @@ function Input({ setIsModalOpen }) {
           <form onSubmit={handleSubmit} className="space-y-4">
             <input
               type="text"
-              onChange={(e) => setFrom(e.target.value)}
+              onChange={handleFromChange}
               value={from}
               placeholder="From"
               className="w-full border-b-2 focus:outline-none focus:border-pink-500 p-2"
             />
             <input
               type="text"
-              onChange={(e) => setTo(e.target.value)}
+              onChange={handleToChange}
               value={to}
               placeholder="To"
               className="w-full border-b-2 focus:outline-none focus:border-pink-500 p-2"
             />
             <textarea
               placeholder="Your message"
-              onChange={(e) => setContent(e.target.value)}
+              onChange={handleContentChange}
               value={content}
               className="w-full border-b-2 focus:outline-none focus:border-pink-500 p-2"
             ></textarea>
