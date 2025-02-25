@@ -4,6 +4,10 @@ export const sendMessage = async (req, res) => {
   try {
     const { from, to, content } = req.body;
 
+    if (!content || content.trim() === "") {
+      return res.status(400).json({ error: "Message content cannot be empty" });
+    }
+
     const message = await prisma.message.create({
       data: { from, to, content },
     });
