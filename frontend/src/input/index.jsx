@@ -3,7 +3,7 @@ import axios from "axios";
 import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 
-const Input = () => {
+function Input({ setIsModalOpen }) {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [content, setContent] = useState("");
@@ -36,11 +36,11 @@ const Input = () => {
   return (
     <div className="flex min-h-screen items-center justify-center p-6">
       <Toaster position="top-center" reverseOrder={false} />
-      <div className="grid md:grid-cols-2 gap-6 max-w-4xl rounded-lg p-8 shadow-lg">
+      <div className="grid md:grid-cols-2 gap-6 max-w-4xl rounded-lg p-8 shadow-lg bg-white">
         <div className="">
           <img src="/bg.png" alt="" />
         </div>
-        <div className="bg-purple-900 p-6 rounded-lg text-white ">
+        <div className="bg-[#16359f] p-6 rounded-lg text-white ">
           <h2 className="text-3xl font-bold mb-4">
             "Speak freely, stay anonymous. Share your thoughts, and express
             yourself without fear."
@@ -68,15 +68,21 @@ const Input = () => {
             ></textarea>
             <button
               type="submit"
-              className="w-full bg-pink-500 text-white py-2 rounded-lg flex items-center justify-center gap-2 cursor-pointer hover:bg-pink-600"
+              className="w-full bg-white py-2 text-[#16359f] rounded-lg flex items-center justify-center gap-2 cursor-pointer hover:bg-[#16359f] hover:text-white hover:border-white"
             >
               ✈ Send Message
+            </button>
+            <button
+              className="w-full bg-pink-500 text-white py-2 rounded-lg flex items-center justify-center gap-2 cursor-pointer hover:bg-pink-600"
+              onClick={() => setIsModalOpen(false)}
+            >
+              Close
             </button>
           </form>
         </div>
       </div>
     </div>
   );
-};
+}
 
 export default Input;

@@ -1,50 +1,14 @@
 import React, { useState } from "react";
+import Input from "./input";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
-const posts = [
-  {
-    title: "To Her: FEJS 1 'K'",
-    content:
-      "Satu bulan lebih berlalu dan aku masih menunggumu bales chat, bahkan hanya untuk sekedar say hi to me :(",
-    comments: ["Fejs 1? Kezia ya om?"],
-  },
-  {
-    title: "cie, menfess udah sepi",
-    content: "😔 kangen suasana kelas",
-    comments: [],
-  },
-  {
-    title: "Yg cinlok selain galang nadia siapa lg ni",
-    content: "",
-    comments: ["maunya sih aku tpi dia ga peka", "akuu, tapi hts"],
-  },
-  {
-    title: "Itu anak pm-1 sama ui/ux-5 ada yang jadian?",
-    content: "Tagih PJ sebinar gasehh",
-    comments: [
-      "Siapa??",
-      "nadia galang",
-      "wanjir mamah knp anakmu npc di binar 😂😂😂",
-    ],
-  },
-  {
-    title: "kangen nadia pm1.",
-    content: "chat gadibales coooo :) dibaca ajakaga wkww",
-    comments: ["anonnn"],
-  },
-];
-
-const Card = ({ title, content, comments }) => {
+const Card = ({ from, to, content }) => {
   return (
     <div className="bg-white p-4 rounded-lg shadow-md break-words">
-      <h3 className="font-bold text-gray-800">{title}</h3>
+      <h3 className="font-bold text-gray-800">From : {from}</h3>
+      <h3 className="font-bold text-gray-800"> To : {to}</h3>
       <p className="text-gray-600 mt-2">{content}</p>
-      <div className="mt-4 flex justify-between text-gray-500 text-sm">
-        <div className="flex items-center space-x-1">
-          <span>💬</span>
-          <span>{comments.length}</span>
-        </div>
-        <button className="text-blue-500">Tambah komentar</button>
-      </div>
     </div>
   );
 };
@@ -52,38 +16,57 @@ const Card = ({ title, content, comments }) => {
 const App = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  return (
-    <div className="min-h-screen bg-blue-900 p-4 relative">
-      <div className="columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
-        {posts.map((post, index) => (
-          <div key={index} className="mb-4 break-inside-avoid">
-            <Card
-              title={post.title}
-              content={post.content}
-              comments={post.comments}
-            />
-          </div>
-        ))}
+  const {
+    data: posts = [],
+    isFetching,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["get all message"],
+    queryFn: async () =>
+      axios
+        .get(`${import.meta.env.VITE_API_ENDPOINT}/api/messages/getAllMessage`)
+        .then((response) => response.data),
+  });
+
+  if (isFetching || isLoading) {
+    return <div className="text-white text-center mt-10">Please wait...</div>;
+  }
+
+  if (error) {
+    return (
+      <div className="text-red-500 text-center mt-10">
+        Error loading messages!
       </div>
-      {/* Floating Action Button */}
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-[#16359f] p-4 relative">
+      <div className="columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
+        {posts.length > 0 ? (
+          posts.map((post, index) => (
+            <div key={index} className="mb-4 break-inside-avoid">
+              <Card from={post.from} to={post.to} content={post.content} />
+            </div>
+          ))
+        ) : (
+          <div className="text-white text-center w-full">
+            No messages available.
+          </div>
+        )}
+      </div>
+
       <button
-        className="fixed bottom-6 right-6 bg-blue-500 text-white p-4 rounded-full shadow-lg hover:bg-blue-600 focus:outline-none"
+        className="fixed bottom-6 right-6 bg-white text-[#16359f] p-4 rounded-full shadow-lg hover:bg-blue-600 hover:text-white focus:outline-none cursor-pointer"
         onClick={() => setIsModalOpen(true)}
       >
         ➕
       </button>
-      {/* Modal */}
+
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg">
-            <h2 className="text-xl font-bold">Tambah Post</h2>
-            <button
-              className="mt-4 bg-red-500 text-white px-4 py-2 rounded"
-              onClick={() => setIsModalOpen(false)}
-            >
-              Tutup
-            </button>
-          </div>
+          <Input setIsModalOpen={setIsModalOpen} />
         </div>
       )}
     </div>
