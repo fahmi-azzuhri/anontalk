@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Input from "./input";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { IoChatbubblesOutline } from "react-icons/io5";
 
 const Card = ({ from, to, content }) => {
   return (
@@ -42,8 +43,17 @@ const App = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#16359f] p-4 relative">
-      <div className="columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
+    <div className="min-h-screen bg-[#16359f] relative">
+      <nav class="flex items-center justify-between flex-wrap bg-[#16359f] p-6">
+        <div class="flex flex-col flex-shrink-0 text-white gap-3">
+          <div className="flex">
+            <IoChatbubblesOutline size={30} />
+            <span class="font-semibold text-xl tracking-tight">Anontalk!</span>
+          </div>
+          <h3>Boleh bebas tulis apapun untuk siapapun yang penting NO SARA</h3>
+        </div>
+      </nav>
+      <div className="columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4 mt-5">
         {posts.length > 0 ? (
           posts.map((post, index) => (
             <div key={index} className="mb-4 break-inside-avoid">
