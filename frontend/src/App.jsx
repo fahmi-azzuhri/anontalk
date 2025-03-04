@@ -53,7 +53,7 @@ const App = () => {
           <h3>Boleh bebas tulis apapun untuk siapapun yang penting NO SARA</h3>
         </div>
       </nav>
-      <div className="columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4 mt-5">
+      <div className="columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4 mt-5 p-4">
         {posts.length > 0 ? (
           posts.map((post, index) => (
             <div key={index} className="mb-4 break-inside-avoid">
